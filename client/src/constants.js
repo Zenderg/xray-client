@@ -1,2 +1,2 @@
-export const API_HOST = 'localhost:3000'
-export const API_URL = `http://${API_HOST}`
+export const API_URL = import.meta.env.MODE === 'production' ? window.location.protocol + "//" + window.location.host : import.meta.env.VITE_API_URL
+export const WS_URL = import.meta.env.MODE === 'production' ? 'ws://' + window.location.host : import.meta.env.VITE_WS_URL

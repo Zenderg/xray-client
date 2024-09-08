@@ -4,7 +4,7 @@ WORKDIR /app/client
 COPY client/package*.json ./
 RUN npm install
 COPY client/ ./
-RUN npm run build
+RUN npm run build --mode='production'
 
 FROM node:16
 WORKDIR /app

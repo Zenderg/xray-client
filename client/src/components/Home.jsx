@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { backend } from '../utils/backend';
 import { Button, FormControl, FormLabel, Progress, Tag, Textarea, useToast } from '@chakra-ui/react';
 import { Switch } from '@chakra-ui/react'
-import { API_HOST } from '../constants';
+import { WS_URL } from '../constants';
 
 import './Home.css'
 
@@ -31,7 +31,7 @@ const Home = () => {
     }, []);
   
     const connectWebSocket = () => {
-        const ws = new WebSocket(`ws://${API_HOST}`);
+        const ws = new WebSocket(`${WS_URL}`);
 
         ws.onopen = () => {
             console.log('WebSocket connected');
