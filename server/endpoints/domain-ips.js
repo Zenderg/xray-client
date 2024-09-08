@@ -1,10 +1,9 @@
-import { getCachedCIDRs, mergeCIDRs, saveCachedCIDRs } from "../utils/cidr";
-import { execPromise } from "../utils/exec-promise";
-import { broadcastProgress } from "../utils/progress";
+import { getAllCidrs, getCachedCIDRs, getCIDR, isSpecialIp, mergeCIDRs, saveCachedCIDRs } from "../utils/cidr.js";
+import { execPromise } from "../utils/exec-promise.js";
+import { broadcastProgress } from "../utils/progress.js";
 
 export async function postFindCidrs(req, res) {
     const { domains, useCache } = req.body;
-    const results = {};
     let allCIDRs = [];
 
     try {
@@ -12,10 +11,14 @@ export async function postFindCidrs(req, res) {
         let processedDomains = 0;
 
         for (const domain of domains) {
+            console.log("----------");
+            console.log(domain);
+            console.log("----------");
+
             if (useCache) {
                 const cachedCIDRs = await getCachedCIDRs(domain);
+
                 if (cachedCIDRs) {
-                    results[domain] = cachedCIDRs;
                     allCIDRs = [...allCIDRs, ...cachedCIDRs];
                     processedDomains++;
                     broadcastProgress(processedDomains, totalDomains);
@@ -35,20 +38,21 @@ export async function postFindCidrs(req, res) {
                 })
             );
 
-            const allIps = [...new Set([...ipList, ...subdomainIps.flatMap(sub => sub.ips)])];
+            let allIps = [...new Set([...ipList, ...subdomainIps.flatMap(sub => sub.ips)])];
+            allIps = allIps.filter(ip => !isSpecialIp(ip))
             const cidrs = await Promise.all(allIps.map(getCIDR));
             const mergedCIDRs = mergeCIDRs(cidrs.filter(Boolean));
 
-            const result = {
-                ips: ipList,
-                cidrs: mergedCIDRs,
-                subdomains: subdomainIps
-            };
-
             allCIDRs = [...allCIDRs, ...mergedCIDRs];
 
-            results[domain] = result;
-            await saveCachedCIDRs(domain, result);
+            await saveCachedCIDRs(domain, mergedCIDRs);
+
+            console.log(`ips: ${ipList.join(', ')}`)
+            console.log(`cidrs: ${mergedCIDRs.join(', ')}`)
+            console.log("Subdomains:")
+            subdomainIps.forEach((s) => {
+                console.log(`${s.subdomain}: ${s.ips.join(', ')}`)
+            })
 
             processedDomains++;
             broadcastProgress(processedDomains, totalDomains);
@@ -61,3 +65,9 @@ export async function postFindCidrs(req, res) {
         res.status(500).json({ error: 'An error occurred during lookup' });
     }
 };
+
+export async function getCidrs(req, res) {
+    const allCidrs = await getAllCidrs()
+
+    res.json(allCidrs);
+}

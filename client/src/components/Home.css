@@ -1,0 +1,25 @@
+.vpn-status {
+    margin-left: 10px;
+}
+
+.vpn-control {
+    margin-bottom: 20px;
+}
+
+.domains-list {
+    margin-bottom: 15px;
+}
+
+.domains-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.results {
+    background-color: rgb(218, 218, 218);
+    padding: 10px;
+    max-height: 500px;
+    overflow: auto;
+}

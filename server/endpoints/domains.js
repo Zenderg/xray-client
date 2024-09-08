@@ -1,5 +1,5 @@
-import { CACHE_DIR } from "../constants";
-import { loadDomains, saveDomains } from "../utils/domains";
+import { CACHE_DIR } from "../constants.js";
+import { loadDomains, saveDomains } from "../utils/domains.js";
 import fs from 'fs/promises';
 
 export async function getDomains(req, res) {

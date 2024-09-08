@@ -1,6 +1,5 @@
-import { XRAY_CONFIG_FILE } from "../constants";
-import { startXray, stopXray } from "../utils/xray";
-import {xrayProcess} from '../global'
+import { XRAY_CONFIG_FILE } from "../constants.js";
+import { getXrayProcess, startXray, stopXray } from "../utils/xray.js";
 import fs from 'fs/promises';
 
 export async function getVpnConfig(req, res) {
@@ -42,6 +41,8 @@ export async function postVpnConfig(req, res) {
     try {
         const config = JSON.stringify(req.body, null, 2);
         await fs.writeFile(XRAY_CONFIG_FILE, config);
+        stopXray();
+        startXray();
         res.json({ message: 'VPN config updated successfully' });
     } catch (error) {
         console.error('Error updating VPN config:', error);
@@ -50,7 +51,7 @@ export async function postVpnConfig(req, res) {
 };
 
 export async function getVpnStatus(req, res) {
-    res.json({ status: xrayProcess ? 'running' : 'stopped' });
+    res.json({ status: getXrayProcess() ? 'running' : 'stopped' });
 };
 
 export async function postRestartVpn(req, res) {

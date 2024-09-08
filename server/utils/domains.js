@@ -1,4 +1,4 @@
-import { DOMAINS_FILE } from "../constants";
+import { DOMAINS_FILE } from "../constants.js";
 import fs from 'fs/promises';
 
 export async function saveDomains(domains) {

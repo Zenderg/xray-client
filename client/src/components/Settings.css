@@ -1,0 +1,10 @@
+.vpn-config {
+    margin-bottom: 15px;
+    height: 500px;
+}
+
+.vpn-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}

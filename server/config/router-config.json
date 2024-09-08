@@ -1,0 +1,9 @@
+{
+  "ssh": {
+    "host": "192.168.1.1",
+    "username": "admin",
+    "password": "password"
+  },
+  "redirectIp": "192.168.1.100",
+  "redirectPort": "8080"
+}

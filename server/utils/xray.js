@@ -1,12 +1,14 @@
-import { xrayProcess } from "../global";
 import { exec } from 'child_process';
-import { wss } from "../providers";
+import { wss } from "../providers.js";
+import { XRAY_CONFIG_FILE } from '../constants.js';
+
+let xrayProcess = null;
 
 export function startXray() {
     if (xrayProcess) {
         xrayProcess.kill();
     }
-    xrayProcess = exec('xray run -config /app/xray-config.json');
+    xrayProcess = exec(`xray run -config ${XRAY_CONFIG_FILE}`);
     xrayProcess.stdout.on('data', (data) => {
         console.log(`Xray stdout: ${data}`);
         broadcastXrayStatus('running');
@@ -35,4 +37,8 @@ export function broadcastXrayStatus(status) {
             client.send(JSON.stringify({ type: 'xrayStatus', status }));
         }
     });
+}
+
+export function getXrayProcess() {
+    return xrayProcess
 }

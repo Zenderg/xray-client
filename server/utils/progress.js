@@ -1,4 +1,4 @@
-import { wss } from "../providers";
+import { wss } from "../providers.js";
 
 export function broadcastProgress(current, total) {
     const progress = Math.round((current / total) * 100);
