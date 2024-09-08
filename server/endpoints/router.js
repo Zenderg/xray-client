@@ -45,9 +45,12 @@ export async function getRouterConfig(req, res) {
       console.log("Clear previous redirects completed...")
   
       for (const cidr of cidrs) {
-        const command = `iptables -t nat -A PREROUTING -p tcp -d ${cidr} -j DNAT --to-destination ${routerConfig.redirectIp}:${routerConfig.redirectPort}`;
-        console.log(command)
-        await ssh.execCommand(command);
+        const commandTcp = `iptables -t nat -A PREROUTING -p tcp -d ${cidr} -j DNAT --to-destination ${routerConfig.redirectIp}:${routerConfig.redirectPort}`;
+        const commandUdp = `iptables -t nat -A PREROUTING -p udp -d ${cidr} -j DNAT --to-destination ${routerConfig.redirectIp}:${routerConfig.redirectPort}`;
+        console.log(commandTcp)
+        console.log(commandUdp)
+        await ssh.execCommand(commandTcp);
+        await ssh.execCommand(commandUdp);
       }
   
       ssh.dispose();
