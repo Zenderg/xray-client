@@ -1,0 +1,39 @@
+body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+.container { display: flex; gap: 20px; }
+.input-section { flex: 1; }
+.results-section { flex: 1; }
+textarea { width: 100%; height: 300px; }
+button { margin-top: 10px; margin-right: 10px; }
+#results { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
+#progress-bar {
+    width: 100%;
+    background-color: #f0f0f0;
+    padding: 3px;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
+}
+#progress-bar-fill {
+    display: block;
+    height: 22px;
+    background-color: #659cef;
+    border-radius: 3px;
+    transition: width 500ms ease-in-out;
+}
+
+#vpn-config {
+    width: 100%;
+    height: 300px;
+}
+
+#xray-status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.status-running { background-color: #4CAF50; color: white; }
+.status-stopped { background-color: #f44336; color: white; }
+.status-error { background-color: #ff9800; color: white; }
+
+.vpn-controls button {
+    margin-right: 10px;
+}
