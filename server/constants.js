@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs/promises';
 
-const CONFIG_DIR = process.env.CONFIG_DIR || path.join(process.cwd(), 'config');
+export const CONFIG_DIR = process.env.CONFIG_DIR || path.join(process.cwd(), 'config');
 
 fs.mkdir(CONFIG_DIR, { recursive: true }).catch(console.error);
 

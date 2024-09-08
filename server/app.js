@@ -5,8 +5,13 @@ import { getCidrs, postFindCidrs } from './endpoints/domain-ips.js';
 import { getVpnConfig, getVpnStatus, postRestartVpn, postStartVpn, postStopVpn, postVpnConfig } from './endpoints/vpn.js';
 import { startXray } from './utils/xray.js';
 import { getRouterConfig, postApplyRedirect, postRouterConfig } from './endpoints/router.js';
+import { initConfigFiles } from './utils/default-providers.js';
 
-const port = 3000;
+initConfigFiles().then(() => {
+    console.log('Configuration files initialized');
+}).catch(error => {
+    console.error('Error initializing configuration files:', error);
+});
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -38,6 +43,8 @@ app.get('/router-config', getRouterConfig);
 app.post('/router-config', postRouterConfig);
 
 startXray();
+
+const port = 3000;
 
 server.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
