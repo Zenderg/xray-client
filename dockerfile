@@ -11,7 +11,7 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y dnsutils whois ipcalc iprange wget unzip
 
-RUN wget -O xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8.16/Xray-linux-64.zip && \
+RUN wget -O xray.zip https://github.com/XTLS/Xray-core/releases/download/v1.8.16/Xray-linux-32.zip && \
     unzip xray.zip && \
     mv xray /usr/local/bin/ && \
     chmod +x /usr/local/bin/xray && \
