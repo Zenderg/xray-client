@@ -25,5 +25,3 @@ dist-ssr
 
 cache
 config/*
-!config/router-config.json
-!config/xray-config.json

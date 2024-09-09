@@ -4,8 +4,13 @@ import { getDomains, postClearDomainsCache, postDomains } from './endpoints/doma
 import { getCidrs, postFindCidrs } from './endpoints/domain-ips.js';
 import { getVpnConfig, getVpnStatus, postRestartVpn, postStartVpn, postStopVpn, postVpnConfig } from './endpoints/vpn.js';
 import { startXray } from './utils/xray.js';
-import { getRouterConfig, postApplyRedirect, postRouterConfig } from './endpoints/router.js';
+import { getRouterConfig, postApplyRedirect, postResetRedirect, postRouterConfig } from './endpoints/router.js';
 import { initConfigFiles } from './utils/default-providers.js';
+import path from 'path'
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 initConfigFiles().then(() => {
     console.log('Configuration files initialized');
@@ -19,8 +24,12 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 app.use(express.json());
+
+// app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, 'public/index.html'));
+// });
 
 app.get('/domains', getDomains);
 app.post('/domains', postDomains);
@@ -39,6 +48,7 @@ app.post('/restart-vpn', postRestartVpn);
 app.get('/xray-status', getVpnStatus);
 
 app.post('/apply-redirect', postApplyRedirect);
+app.post('/reset-redirect', postResetRedirect);
 app.get('/router-config', getRouterConfig);
 app.post('/router-config', postRouterConfig);
 

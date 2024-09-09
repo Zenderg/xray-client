@@ -1,5 +1,5 @@
 import { NodeSSH } from 'node-ssh';
-import { getRouterConfigData, updateRouterConfig } from '../utils/router.js';
+import { clearPreviousRoutes, getRouterConfigData, updateRouterConfig } from '../utils/router.js';
 import { getAllCidrs } from '../utils/cidr.js';
 
 export async function getRouterConfig(req, res) {
@@ -30,17 +30,7 @@ export async function getRouterConfig(req, res) {
       const ssh = new NodeSSH();
       await ssh.connect(routerConfig.ssh);
 
-      const { stdout: currentRules } = await ssh.execCommand('iptables-save -t nat');
-
-      const rulesToDelete = currentRules.split('\n')
-        .filter(line => line.includes(`--to-destination ${routerConfig.redirectIp}:${routerConfig.redirectPort}`))
-        .map(line => line.replace(/^-A /, '').trim());
-
-      for (const rule of rulesToDelete) {
-        const clearCommand = `iptables -t nat -D ${rule} 2>/dev/null`
-        console.log(clearCommand)
-        await ssh.execCommand(clearCommand);
-      }
+      await clearPreviousRoutes(ssh, routerConfig)
 
       console.log("Clear previous redirects completed...")
   
@@ -63,3 +53,23 @@ export async function getRouterConfig(req, res) {
       res.status(500).json({ error: 'An error occurred while applying redirect rules' });
     }
   }
+
+export async function postResetRedirect(req, res) {
+  try {
+    const routerConfig = await getRouterConfigData();
+
+    const ssh = new NodeSSH();
+    await ssh.connect(routerConfig.ssh);
+
+    await clearPreviousRoutes(ssh, routerConfig)
+
+    console.log("Clear previous redirects completed")
+
+    ssh.dispose();
+
+    res.json({ message: 'Redirect rules reset successfully' });
+  } catch (error) {
+    console.error('Error reseting redirect rules:', error);
+    res.status(500).json({ error: 'An error occurred while reseting redirect rules' });
+  }
+}

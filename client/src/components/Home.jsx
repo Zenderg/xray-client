@@ -188,6 +188,22 @@ const Home = () => {
     }
   };
 
+  const resetRedirect = async () => {
+    try {
+      await backend.post('/reset-redirect');
+      toast({
+        title: 'Redirect rules reset successfully',
+        status: 'success',
+      })
+    } catch (error) {
+      toast({
+        title: 'Error reseting redirect rules',
+        description: error,
+        status: 'error',
+      })
+    }
+  };
+
   return (
     <>
         <div className="container">
@@ -210,6 +226,7 @@ const Home = () => {
                 <Button onClick={() => lookup(false)}>Lookup (No Cache)</Button>
                 <Button onClick={clearCache}>Clear Cache</Button>
                 <Button onClick={applyRedirect}>Apply Redirect Rules</Button>
+                <Button onClick={resetRedirect}>Reset Redirect Rules</Button>
             </div>
 
             <Progress size='xs' value={progress} max="100" />
